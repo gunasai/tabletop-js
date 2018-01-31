@@ -1,0 +1,86 @@
+<html>
+<head>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- TABLETOP -->
+    <script type='text/javascript'> 
+    
+    var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1R1adb6_On_ow61L7VjGuXkxDx2rNMVlo_dDql5Q1QvQ/edit?usp=sharing';
+    function init() { 
+        Tabletop.init( { key: publicSpreadsheetUrl, callback: showInfo, simpleSheet: true } ) 
+    } 
+    
+    function showInfo(data, tabletop) { 
+        // alert('Successfully processed!') 
+        // console.log(data); 
+
+        var container = document.querySelector(".container");
+        container.innerHTML = "";
+
+        var doubles = data.map(function(data) {
+            var obj = {};
+            obj = [data.NAME, Number(data.RPM)];
+            console.log(data.NAME);
+            return obj;
+        });
+
+        drawChart(doubles);
+    } 
+    
+    window.addEventListener('DOMContentLoaded', init)
+    </script>
+
+    <!-- GOOGLE CHARTS -->
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart'] });
+
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.charts.setOnLoadCallback(init);
+
+        function drawChart(dataStuff) {
+            // var data = google.visualization.arrayToDataTable([
+            //     ['Director (Year)', 'Rotten Tomatoes', 'IMDB'],
+            //     ['Alfred Hitchcock (1935)', 8.4, 7.9],
+            //     ['Ralph Thomas (1959)', 6.9, 6.5],
+            //     ['Don Sharp (1978)', 6.5, 6.4],
+            //     ['James Hawes (2008)', 4.4, 6.2]
+            // ]);
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'NAME');
+            data.addColumn('number', 'RPM');
+
+            data.addRows(dataStuff);
+
+            var options = {
+                vAxis: { title: 'RPM' },
+                colors: ['#f3b49f'],
+                isStacked: true
+            };
+
+            var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
+
+            chart.draw(data, options);
+        }
+    </script>
+
+
+</head>
+
+<body>
+    <h1>Data Visualization using Tabletop.js</h1>
+    <h3>Real Plus Minus for NBA players in 2017</h3>
+    <div class="container">
+    </div>
+    <div class="chart" id="chart_div" style="width: 900px; height: 500px;"></div>
+    <footer>
+        <p>Made with <i class="fa fa-coffee" aria-hidden="true"></i> by Gunasai
+</p>
+    </footer>
+</body>
+
+</html>
